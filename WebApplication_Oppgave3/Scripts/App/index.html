@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html ng-app="App">
+<head>
+    <script src="../LibJS/angular.min.js"></script>
+    <script src="../LibJS/jquery-2.1.1.min.js"></script>
+    <script src="../LibJS/bootstrap.min.js"></script>
+    <!--<script src="../LibJS/angular.js"></script> -->
+    <!-- <script src="../LibJS/angular-route.js"></script> -->
+    <link href="../LibJS/bootstrap.min.css" rel="stylesheet" />
+    <script src="QAController.js"></script>
+    <title></title>
+</head>
+<body>
+    <div class="page-header text-center text-primary"><h2>OFTE STILTE SPØRSMÅL</h2></div>
+    <div class="row" ng-controller="QAController">
+      <!--  <div class="text-center" ng-show="laster"><h3>Laster data, vennligst vent ...</h3></div> -->
+        <div ng-app-collapse ng-app-collapse-panel-id="collapse-panel" ng-app-collapse-panel-body-id="collapse-panel-body"></div>
+        <div class=" form-group  text-primary  text-right">
+            <label>Søk</label>
+            <input class=" glyphicon-align-right bg-info " name="Question" ng-model="Qtext" ng-required="true" />
+        </div>
+        <div class="panel-group" id="{{panelId}}" >
+            <div class="panel panel-default" >
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#{{panelId}}" href="#{{panelBaseId}}-1">KUNDEKONTO</a>
+                    </h4>
+                </div>
+                <div id="{{panelBaseId}}-1" class="panel-collapse collapse" >  
+                    <div class="panel">
+                        <table class="table">
+                            <tbody ng-repeat="Question in Questions | filter: {Cid:1, Qtext:Qtext}">
+                                <tr>
+                                    <td> <content data-ng-include vocab="kundekonto"></content> {{Question.Qtext}} </td>
+                                    <td><button class="badge btn-primary" ng-btn-sm ng-click=" hentQuestion(Qid)">DETALJER</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel-heading">
+                    <h5 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#{{panelId}}" href="#{{panelBaseId}}-2">BETALING</a>
+                    </h5>
+                </div>
+                <div id="{{panelBaseId}}-2" class="panel-collapse collapse">
+                    <div class="panel"> 
+                        <table class="table">
+                            <tbody ng-repeat="Question in Questions | filter: {Cid:2, Qtext:Qtext}">
+                                <tr>
+                                    <td> <content data-ng-include vocab="faktura"></content> {{Question.Qtext}} </td>
+                                    <td><button class="badge btn-primary" ng-btn-sm  ng-click=" hentQuestion(Qid)">DETALJER</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    <button class="btn btn-primary" ng-click=" visRegSkjema()" ng-show="regKnapp">SPØR OSS</button>
+        <div class=" col-sm-4 col-sm-offset-2" ng-show="visSkjema">
+            <form name="skjema">
+                <div class=" form-group">
+                    <label>Spørsmål</label>
+                    <input class="form-control" name="NewQuestion" ng-model="Qtext" ng-required="true" />
+                    <p class="label label-info" ng-show="skjema.$invalid && skjema.$dirty">Skriv inn et sporsmal</p>
+                </div>
+                <div class="form-group">
+                    <!--  <button class="btn btn-success" ng-click="oppdaterQuestion()" ng-disabled="skjema.$invalid" ng-show="oppdatering">Endre</button> -->
+                    <button class="btn btn-primary" ng-click="lagreQuestion()" ng-disabled="skjema.$invalid" ng-model="Qtext" ng-show="register">Registrer</button>
+                </div>
+            </form>
+        </div>
+        <!--<div class="col-sm-4 col-sm-offset-2" ng-show="visQuestion">
+            <form name="Questionskjema">
+                <table class="table table-bordered table-condensed">
+                    <tbody ng-init data-ng-app="Question in Questions">
+                        <tr>
+                            <td>{{Question.Qtext}}</td>
+                            <!--<td><button class="btn btn-danger" ng-click=" hentQuestion(Question.Qid)">Detaljer</button></td>
+                    <td><button class="btn btn-success" ng-click="endreQuestion(Question.Qid)">Endre</button></td> -->
+        <!--            </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" ng-click=" visRegSkjema()" ng-show="regKnapp">Registrer</button>
+            </form>
+        </div> -->
+    </div>
+
+    <!-- <div class="col-sm-4 col-sm-offset-2" ng-show="visQuestions">
+          <div class=" form-group">
+              <label>Søk</label>
+              <input class= "form-control" name="Question" ng-model="Qtext" ng-required="true" />
+          </div>
+          <table class="table table-bordered table-condensed">
+              <thead>
+                  <tr>
+                      <th>Spørsmål</th>
+                     <!-- <th>Svar</th> -->
+    <!--     </tr>
+     </thead>
+     <tbody  ng-repeat="Question in Questions | filter:Qtext ">
+
+         <tr>
+             <td>{{Question.Qtext}}</td>
+             <!--<td><button class="btn btn-danger" ng-click=" sletteQuestion(Question.Qid)">Slett</button></td>-->
+    <!--  <td><button class="btn btn-success" ng-click="endreQuestion(Question.Qid)">Endre</button></td>
+                    <td><button class="btn btn-primary" ng-click="hentQuestion(Question.Qid)">Detaljer</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-primary" ng-click=" visRegSkjema()" ng-show="regKnapp">Registrer</button>
+         <div class="form-group">
+                <button class="btn btn-success" ng-click="oppdaterQuestion()" ng-disabled="skjema.$invalid" ng-show="oppdatering">Endre</button>
+                <button class="btn btn-primary" ng-click="lagreQuestion()" ng-disabled="skjema.$invalid" ng-model="Qtext" ng-show="register">Registrer</button> 
+            </div>  
+    </div> -->
+
+</body>
+</html>
